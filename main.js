@@ -19,7 +19,7 @@ function logando(resposta){
     // funçao que vai sair da tela de login
     if(resposta.status === 200){
         idInterval = setInterval( permanencia,5000 );
-        idIntervalMensagens = setInterval( pegandoMensagens,2000 );
+        idIntervalMensagens = setInterval( pegandoMensagens,10000 );
         idIntervalParticipantes= setInterval( buscandoPartip,5000 );
         const telaInicial = document.querySelector('.first-screen');        
         if(!telaInicial.classList.contains('hidden')){
@@ -53,16 +53,19 @@ function ImprimeMensagens(resposta){
     ul.innerHTML=''
     
     for (let i = 0; i < mensagens.length; i++){
-        if(mensagens[i].type === 'status'){
+        console.log(mensagens[i].type)
+        if(mensagens[i].type === "message"){
+            ul.innerHTML+=
+            `<li class="${mensagens[i].type}">
+                <p><span class="time">(${mensagens[i].time}) </span> <span class="name">${mensagens[i].from}</span> para <span class="name">${mensagens[i].to}</span> ${mensagens[i].text}</p>
+            </li>`;}
+        else if(mensagens[i].type === 'status'){
             ul.innerHTML+=
             `<li class="${mensagens[i].type}">
                 <p><span class="time">(${mensagens[i].time}) </span> <span class="name">${mensagens[i].from}</span> ${mensagens[i].text}</p>
-            </li>`;
-        }else if(mensagens[i].type === 'message'){
-            `<li class="${mensagens[i].type}">
-                <p><span class="time">(${mensagens[i].time}) </span> <span class="name">${mensagens[i].from}</span> para <span class="name">${mensagens[i].to}</span> ${mensagens[i].text}</p>
-            </li>`;
-        }else if(mensagens[i].type === 'private_message' && mensagens[i].to === usuario.name){
+            </li>`;}
+        else if(mensagens[i].type === 'private_message' && mensagens[i].to === usuario.name){
+            ul.innerHTML+=
             `<li class="${mensagens[i].type}">
                 <p><span class="time">(${mensagens[i].time}) </span> <span class="name">${mensagens[i].from}</span> para <span class="name">${mensagens[i].to}</span> ${mensagens[i].text}</p>
             </li>`;
@@ -76,7 +79,6 @@ function pegandoMensagens(){
     const promessa = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
     promessa.then(ImprimeMensagens);
     promessa.catch(erro);
-    console.log('ta repitindo')
 }
 
 function showSideBar(){
@@ -89,7 +91,7 @@ function showSideBar(){
 }
 
 function imprimeParticipantes(participantes){
-    
+
     const lista=document.querySelector('.contatos');
     lista.innerHTML=`
     <li>
@@ -104,7 +106,6 @@ function imprimeParticipantes(participantes){
             <li>
             <ion-icon name="person-circle"></ion-icon> ${listaParticipantes[i].name}
             </li>  `;
-            console.log(listaParticipantes[i].name);
         }
     }
 }
@@ -116,9 +117,15 @@ function buscandoPartip(){
     promessa.catch(erro)
 }
 
-//function enviarMensagen(){}
+function enviarMensagen(){
+    const escrita=document.querySelector('.mensagem')
 
+    if(escrita.value !== ''){
+        const mensagem = {from:usuario.name, to: 'Todos', text: escrita.value, type: 'message'}
     //https://mock-api.driven.com.br/api/v6/uol/messages
+    const requisicao = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', mensagem)
+    requisicao.then(console.log('sucesso'))
+    requisicao.catch(erro)
 
     /* {
         from: "nome do usuário",
@@ -126,3 +133,5 @@ function buscandoPartip(){
         text: "mensagem digitada",
         type: "message" // ou "private_message" para o bônus
     } */
+    }
+}
