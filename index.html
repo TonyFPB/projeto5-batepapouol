@@ -11,40 +11,38 @@
     <title>Bate-Papo UOL</title>
 </head>
 <body>
-    <div class="first-screen hidden">
+    <div class="first-screen ">
         <img class="first-logo" src="img-uol/logoUol.jpg" alt="Logo do bate-papo">
         <input class="user" type="text" placeholder="Seu nome">
-        <button>Entrar</button>
+        <button onclick="logar()">Entrar</button>
     </div>
     <div class="container">
 
         <div class="header">
             <img src="img-uol/logoUol.jpg" alt="Logo Bate-Papo">
-            <ion-icon name="people"></ion-icon>
+            <ion-icon name="people" onclick="showSideBar()"></ion-icon>
         </div>
 
-        <ul class="messenger">
-            <li class="status">
-                <p><span class="time">(09:22:48)</span> <span class="name">Joao</span> entrou na sala...</p>
-            </li>
-            <li class="everyone">
-                <p><span class="time">(10:52:00)</span> <span class="name">Maria</span> para <span class="name">Todos</span>: bom dia grupo!</p>
-            </li>
-            <li class="private">
-                <p><span class="time">(00:40:37)</span> <span class="name">Joao</span> reservadamente para <span class="name">Maria</span>: Oi gatinha quer tc?</p>
-            </li>
-            <li class="status">
-                <p><span class="time">(14:22:05)</span> <span class="name">Maria</span> saiu na sala...</p>
-            </li>
-           
-        </ul>
+        <div class="side-bar hidden">
+            <div class="left" onclick="showSideBar()">oi</div>
+            <div class="rigth">
+            <div class="topo"><h1>Escolha um contato</h1> <h1>para enviar uma mensagem:</h1></div>
+            <ul class="contatos"></ul>
+            </div>
+        </div>
+
+        <ul class="messenger"></ul>
 
         <div class="send">
-            <input type="text" placeholder="Escreva aqui...">
-            <ion-icon name="paper-plane-outline"></ion-icon>   
+            <div>
+                <input type="text" placeholder="Escreva aqui...">
+            </div>
+            <ion-icon name="paper-plane-outline" onclick="enviarMensagen()"></ion-icon>   
         </div>
-        
+
     </div>
     <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>
