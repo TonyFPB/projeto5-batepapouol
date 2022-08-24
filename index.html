@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="estilos/reset.css">
+    <link rel="stylesheet" href="estilos/style.css">
+    
+    <title>Bate-Papo UOL</title>
+</head>
+<body>
+    <div class="first-screen hidden">
+        <img class="first-logo" src="img-uol/logoUol.jpg" alt="Logo do bate-papo">
+        <input class="user" type="text" placeholder="Seu nome">
+        <button>Entrar</button>
+    </div>
+    <div class="container">
+
+        <div class="header">
+            <img src="img-uol/logoUol.jpg" alt="Logo Bate-Papo">
+            <ion-icon name="people"></ion-icon>
+        </div>
+
+        <ul class="messenger">
+            <li class="status">
+                <p><span class="time">(09:22:48)</span> <span class="name">Joao</span> entrou na sala...</p>
+            </li>
+            <li class="everyone">
+                <p><span class="time">(10:52:00)</span> <span class="name">Maria</span> para <span class="name">Todos</span>: bom dia grupo!</p>
+            </li>
+            <li class="private">
+                <p><span class="time">(00:40:37)</span> <span class="name">Joao</span> reservadamente para <span class="name">Maria</span>: Oi gatinha quer tc?</p>
+            </li>
+            <li class="status">
+                <p><span class="time">(14:22:05)</span> <span class="name">Maria</span> saiu na sala...</p>
+            </li>
+           
+        </ul>
+
+        <div class="send">
+            <input type="text" placeholder="Escreva aqui...">
+            <ion-icon name="paper-plane-outline"></ion-icon>   
+        </div>
+        
+    </div>
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+</body>
+</html>
