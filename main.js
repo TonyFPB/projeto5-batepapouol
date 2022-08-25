@@ -4,6 +4,7 @@ let idInterval;
 let idIntervalMensagens;
 let contador = 0
 let ultima_mensagem = {from: '', to: '', text: '', type: '', time: ''}
+let contatoVerde;
 
 function deuCerto(certeza){
     console.log(certeza)
@@ -19,6 +20,9 @@ function deuErro(error){
     }else if(error.response.status === 400 && usuario.name !== ''){
         const campo_obrigatorio = document.querySelector('.required');
         campo_obrigatorio.innerHTML = '*Usuario ja existente.'; 
+    }else{
+        alert('Algo de errado, erro 400')
+        console.log(error)
     }  
 } 
 
@@ -87,11 +91,7 @@ function ImprimeMensagens(resposta){
         if(i === mensagens.length-1 && comparacaoMensagens){
             const ultima = document.querySelector(`.N${mensagens.length-1}`)
             ultima.scrollIntoView()
-            console.log(i)
-            console.log(i === mensagens.length-1)
-            console.log(ultima_mensagem)
-            console.log(ultima_mensagem !== mensagens[i])
-            console.log(mensagens[i])
+            
             ultima_mensagem = mensagens[i]
         }
         
@@ -125,9 +125,15 @@ function imprimeParticipantes(participantes){
     const listaParticipantes = participantes.data;
     
     for(let i = 0; i<listaParticipantes.length; i++){
-        if(listaParticipantes[i].name !== usuario.name){
+        if(listaParticipantes[i].name === contatoVerde){
             lista.innerHTML+=`
-            <li>
+            <li  onclick = " selecionarContato(this)">
+            <ion-icon name="person-circle"></ion-icon> <p class = 'selecionado'>${listaParticipantes[i].name}</p>
+            </li>  `;
+
+        }else if(listaParticipantes[i].name !== usuario.name){
+            lista.innerHTML+=`
+            <li  onclick = " selecionarContato(this)">
             <ion-icon name="person-circle"></ion-icon> <p>${listaParticipantes[i].name}</p>
             </li>  `;
         }
@@ -164,6 +170,18 @@ function enviarMensagen(){
     } */
 }
 
-function selecionarContato(){
-    document.querySelector('.contatos')
+function selecionarContato(contato){
+    const paragrafoLista = contato.children[1].classList//sel= .comida .borda-verde
+    const listaDeContatos = document.querySelector('.contatos').children
+    
+    for(let i = 0; i < listaDeContatos.length; i++){
+        if(listaDeContatos[i].children[1].classList.contains('selecionado')){
+            listaDeContatos[i].children[1].classList.remove('selecionado')
+        }
+    }
+    
+
+    const paragrafo = contato.children[1]
+    contatoVerde = paragrafo.innerHTML
+    paragrafo.classList.add('selecionado')
 }
