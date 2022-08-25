@@ -14,6 +14,7 @@
     <div class="first-screen ">
         <img class="first-logo" src="img-uol/logoUol.jpg" alt="Logo do bate-papo">
         <input class="user" type="text" placeholder="Seu nome">
+        <div class="required"></div>
         <button onclick="logar()">Entrar</button>
     </div>
     <div class="container">
@@ -24,10 +25,19 @@
         </div>
 
         <div class="side-bar hidden">
-            <div class="left" onclick="showSideBar()">oi</div>
+            <div class="left" onclick="showSideBar()"></div>
             <div class="rigth">
             <div class="topo"><h1>Escolha um contato</h1> <h1>para enviar uma mensagem:</h1></div>
             <ul class="contatos"></ul>
+            <div class="visibility">
+                <div class="topo"><h1>Escolha a visibilidade:</h1></div>
+                <div class="locker">
+                    <ion-icon name="lock-closed"></ion-icon>Reservadamente
+                </div>
+                <div class="locker">
+                    <ion-icon name="lock-open"></ion-icon>Público
+                </div>
+            </div>
             </div>
         </div>
 

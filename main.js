@@ -2,29 +2,49 @@ let mensagens=[];
 let usuario;
 let idInterval;
 let idIntervalMensagens;
+let contador = 0
+let ultima_mensagem = {from: '', to: '', text: '', type: '', time: ''}
 
-
-function erro(error){
-    //funçao que vai mudar a tela de login
-    console.log(error);
+function deuCerto(certeza){
+    console.log(certeza)
 }
+
+function deuErro(error){
+    //funçao que vai consertar os erros
+    const objDeErro = error.response
+    if(error.response.status === 400 && usuario.name === ''){
+        const campo_obrigatorio = document.querySelector('.required');
+        campo_obrigatorio.innerHTML = '*Campo obrigatório.';
+
+    }else if(error.response.status === 400 && usuario.name !== ''){
+        const campo_obrigatorio = document.querySelector('.required');
+        campo_obrigatorio.innerHTML = '*Usuario ja existente.'; 
+    }  
+} 
 
 function permanencia(){
     //Funçao que continua mandando status para o servidor
+
     const requisicao = axios.post('https://mock-api.driven.com.br/api/v6/uol/status', usuario);
-    requisicao.catch(erro);
+    requisicao.catch(deuErro);
+
 }
 
 function logando(resposta){
     // funçao que vai sair da tela de login
+    const campo_obrigatorio = document.querySelector('.required')
+    if(campo_obrigatorio.innerHTML !== ''){
+        campo_obrigatorio.innerHTML=''
+    }
+
     if(resposta.status === 200){
         idInterval = setInterval( permanencia,5000 );
-        idIntervalMensagens = setInterval( pegandoMensagens,10000 );
+        idIntervalMensagens = setInterval( pegandoMensagens,1000 );
         idIntervalParticipantes= setInterval( buscandoPartip,5000 );
+        
         const telaInicial = document.querySelector('.first-screen');        
         if(!telaInicial.classList.contains('hidden')){
             telaInicial.classList.add('hidden');
-    
         }
         
     }
@@ -37,14 +57,8 @@ function logar(){
     
     const requisicao = axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', usuario);
     requisicao.then(logando);
-    requisicao.catch(erro);
+    requisicao.catch(deuErro);
 
-    //https://mock-api.driven.com.br/api/v6/uol/participants
-    /* const dados = {...};
-    const requisicao = axios.post('http://...', dados);
-
-    requisicao.then(tratarSucesso);
-    requisicao.catch(tratarError); */ 
 }
 
 function ImprimeMensagens(resposta){
@@ -53,24 +67,34 @@ function ImprimeMensagens(resposta){
     ul.innerHTML=''
     
     for (let i = 0; i < mensagens.length; i++){
-        console.log(mensagens[i].type)
         if(mensagens[i].type === "message"){
             ul.innerHTML+=
-            `<li class="${mensagens[i].type}">
+            `<li class="${mensagens[i].type} N${i}">
                 <p><span class="time">(${mensagens[i].time}) </span> <span class="name">${mensagens[i].from}</span> para <span class="name">${mensagens[i].to}</span> ${mensagens[i].text}</p>
             </li>`;}
         else if(mensagens[i].type === 'status'){
             ul.innerHTML+=
-            `<li class="${mensagens[i].type}">
+            `<li class="${mensagens[i].type} N${i}">
                 <p><span class="time">(${mensagens[i].time}) </span> <span class="name">${mensagens[i].from}</span> ${mensagens[i].text}</p>
             </li>`;}
-        else if(mensagens[i].type === 'private_message' && mensagens[i].to === usuario.name){
+        else if(mensagens[i].type === 'private_message' && (mensagens[i].to === usuario.name || mensagens[i].from === usuario.name)){
             ul.innerHTML+=
-            `<li class="${mensagens[i].type}">
+            `<li class="${mensagens[i].type} N${i}">
                 <p><span class="time">(${mensagens[i].time}) </span> <span class="name">${mensagens[i].from}</span> para <span class="name">${mensagens[i].to}</span> ${mensagens[i].text}</p>
             </li>`;
         }
-
+        const comparacaoMensagens= (ultima_mensagem.from !== mensagens[mensagens.length-1].from || ultima_mensagem.time !== mensagens[mensagens.length-1].time || ultima_mensagem.type !== mensagens[mensagens.length-1].type || ultima_mensagem.text !== mensagens[mensagens.length-1].text || ultima_mensagem.to !== mensagens[mensagens.length-1].to)
+        if(i === mensagens.length-1 && comparacaoMensagens){
+            const ultima = document.querySelector(`.N${mensagens.length-1}`)
+            ultima.scrollIntoView()
+            console.log(i)
+            console.log(i === mensagens.length-1)
+            console.log(ultima_mensagem)
+            console.log(ultima_mensagem !== mensagens[i])
+            console.log(mensagens[i])
+            ultima_mensagem = mensagens[i]
+        }
+        
     }
 }
 
@@ -78,7 +102,7 @@ function pegandoMensagens(){
     //https://mock-api.driven.com.br/api/v6/uol/messages
     const promessa = axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
     promessa.then(ImprimeMensagens);
-    promessa.catch(erro);
+    promessa.catch(deuErro);
 }
 
 function showSideBar(){
@@ -95,7 +119,7 @@ function imprimeParticipantes(participantes){
     const lista=document.querySelector('.contatos');
     lista.innerHTML=`
     <li>
-    <ion-icon name="people"></ion-icon> Todos
+    <ion-icon name="people"></ion-icon> <p>Todos</p>
     </li>
     `;
     const listaParticipantes = participantes.data;
@@ -104,7 +128,7 @@ function imprimeParticipantes(participantes){
         if(listaParticipantes[i].name !== usuario.name){
             lista.innerHTML+=`
             <li>
-            <ion-icon name="person-circle"></ion-icon> ${listaParticipantes[i].name}
+            <ion-icon name="person-circle"></ion-icon> <p>${listaParticipantes[i].name}</p>
             </li>  `;
         }
     }
@@ -114,18 +138,23 @@ function buscandoPartip(){
     //https://mock-api.driven.com.br/api/v6/uol/participants
     const promessa = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
     promessa.then(imprimeParticipantes)
-    promessa.catch(erro)
+    promessa.catch(deuErro)
+}
+
+function erroAoEnviarMensagem(erro){
+    alert('Voce nao esta mais logado')
+    window.location.reload()
 }
 
 function enviarMensagen(){
     const escrita=document.querySelector('.mensagem')
+    
+    const mensagem = {from:usuario.name, to: 'Todos', text: escrita.value, type: 'message'}
 
-    if(escrita.value !== ''){
-        const mensagem = {from:usuario.name, to: 'Todos', text: escrita.value, type: 'message'}
     //https://mock-api.driven.com.br/api/v6/uol/messages
     const requisicao = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', mensagem)
-    requisicao.then(console.log('sucesso'))
-    requisicao.catch(erro)
+    requisicao.then(deuCerto)
+    requisicao.catch(erroAoEnviarMensagem)
 
     /* {
         from: "nome do usuário",
@@ -133,5 +162,8 @@ function enviarMensagen(){
         text: "mensagem digitada",
         type: "message" // ou "private_message" para o bônus
     } */
-    }
+}
+
+function selecionarContato(){
+    document.querySelector('.contatos')
 }
