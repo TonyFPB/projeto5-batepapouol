@@ -7,7 +7,6 @@
 body{
     width: 100%;
     font-family: 'Roboto', sans-serif;
-    background-color: gray;
 }
 
 .first-screen{
@@ -69,13 +68,13 @@ body{
     margin: 0 10px 0 0 ;
 }
 
-.locker{
+.open, .closed{
     padding: 0 16px;
     display: flex;
     align-items: center;
     font-size: 20px;
 }
-.locker ion-icon{
+.open ion-icon, .closed ion-icon{
     font-size: 30px;
     margin: 0 10px 0 0 ;
 }
@@ -143,9 +142,20 @@ button{
 
 .send input{
     height: 30px;
+    width: 100%;
     font-size: 18px;
     font-weight: 400;
     border-width: 0;
+    margin: 0 0 0 5px;
+}
+.send div{
+    width: 80%;
+}
+
+.privateMsg{
+    color: #505050;
+    font-size: 16px;
+    margin: 8px 0 0 5px;
 }
 
 .send ::-webkit-input-placeholder {
@@ -162,11 +172,15 @@ button{
     margin: 85px 0; 
 }
 
-li{
+.messenger li{
     display: flex;
-    flex-wrap: wrap;
     padding: 15px 0;
     border-radius: 2px;
+}
+
+.messenger p{
+    width: 99%;
+    word-break: break-all;
 }
 
 .status{

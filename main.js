@@ -2,9 +2,9 @@ let mensagens=[];
 let usuario;
 let idInterval;
 let idIntervalMensagens;
-let contador = 0
 let ultima_mensagem = {from: '', to: '', text: '', type: '', time: ''}
 let contatoVerde;
+let privado = false;
 
 function deuCerto(certeza){
     console.log(certeza)
@@ -74,7 +74,7 @@ function ImprimeMensagens(resposta){
         if(mensagens[i].type === "message"){
             ul.innerHTML+=
             `<li class="${mensagens[i].type} N${i}">
-                <p><span class="time">(${mensagens[i].time}) </span> <span class="name">${mensagens[i].from}</span> para <span class="name">${mensagens[i].to}</span> ${mensagens[i].text}</p>
+                <p><span class="time">(${mensagens[i].time}) </span> <span class="name">${mensagens[i].from}</span> para <span class="name">${mensagens[i].to}</span>: ${mensagens[i].text}</p>
             </li>`;}
         else if(mensagens[i].type === 'status'){
             ul.innerHTML+=
@@ -90,7 +90,7 @@ function ImprimeMensagens(resposta){
         const comparacaoMensagens= (ultima_mensagem.from !== mensagens[mensagens.length-1].from || ultima_mensagem.time !== mensagens[mensagens.length-1].time || ultima_mensagem.type !== mensagens[mensagens.length-1].type || ultima_mensagem.text !== mensagens[mensagens.length-1].text || ultima_mensagem.to !== mensagens[mensagens.length-1].to)
         if(i === mensagens.length-1 && comparacaoMensagens){
             const ultima = document.querySelector(`.N${mensagens.length-1}`)
-            ultima.scrollIntoView()
+            //ultima.scrollIntoView()
             
             ultima_mensagem = mensagens[i]
         }
@@ -143,24 +143,24 @@ function imprimeParticipantes(participantes){
 function buscandoPartip(){
     //https://mock-api.driven.com.br/api/v6/uol/participants
     const promessa = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
-    promessa.then(imprimeParticipantes)
-    promessa.catch(deuErro)
+    promessa.then(imprimeParticipantes);
+    promessa.catch(deuErro);
 }
 
 function erroAoEnviarMensagem(erro){
-    alert('Voce nao esta mais logado')
-    window.location.reload()
+    alert('Voce nao esta mais logado');
+    window.location.reload();
 }
 
 function enviarMensagen(){
-    const escrita=document.querySelector('.mensagem')
+    const escrita=document.querySelector('.mensagem');
     
-    const mensagem = {from:usuario.name, to: 'Todos', text: escrita.value, type: 'message'}
+    const mensagem = {from:usuario.name, to: 'Todos', text: escrita.value, type: 'message'};
 
     //https://mock-api.driven.com.br/api/v6/uol/messages
-    const requisicao = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', mensagem)
-    requisicao.then(deuCerto)
-    requisicao.catch(erroAoEnviarMensagem)
+    const requisicao = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', mensagem);
+    requisicao.then(deuCerto);
+    requisicao.catch(erroAoEnviarMensagem);
 
     /* {
         from: "nome do usuário",
@@ -171,17 +171,44 @@ function enviarMensagen(){
 }
 
 function selecionarContato(contato){
+    if(!privado){
+        document.querySelector('.open').classList.remove('selecionado')
+        document.querySelector('.closed').classList.add('selecionado')
+        privado = true
+    }
     const paragrafoLista = contato.children[1].classList//sel= .comida .borda-verde
-    const listaDeContatos = document.querySelector('.contatos').children
+    const listaDeContatos = document.querySelector('.contatos').children;
     
     for(let i = 0; i < listaDeContatos.length; i++){
         if(listaDeContatos[i].children[1].classList.contains('selecionado')){
-            listaDeContatos[i].children[1].classList.remove('selecionado')
+            listaDeContatos[i].children[1].classList.remove('selecionado');
         }
     }
     
+    const paragrafo = contato.children[1];
+    contatoVerde = paragrafo.innerHTML;
+    paragrafo.classList.add('selecionado');
 
-    const paragrafo = contato.children[1]
-    contatoVerde = paragrafo.innerHTML
-    paragrafo.classList.add('selecionado')
+    const privateMsg = document.querySelector('.privateMsg')
+    privateMsg.innerHTML = ``
+}
+
+function privacidade(classe){
+    const priva = document.querySelector(classe);
+    const privaSelecionado = document.querySelector('.visibility .selecionado');
+    if(privaSelecionado !== null){
+        privaSelecionado.classList.remove('selecionado');
+    }
+    priva.classList.add('selecionado');
+    if(classe === '.open'){
+        contatoVerde = undefined
+        if(document.querySelector('.contatos .selecionado') !== null){
+            document.querySelector('.contatos .selecionado').classList.remove('selecionado')
+        }
+        privado = false;
+    
+    }else if(classe === '.closed'){
+        privado = true;
+    }
+    console.log(privado);
 }

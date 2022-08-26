@@ -31,21 +31,26 @@
             <ul class="contatos"></ul>
             <div class="visibility">
                 <div class="topo"><h1>Escolha a visibilidade:</h1></div>
-                <div class="locker">
+                <div class="closed" onclick="privacidade('.closed')">
                     <ion-icon name="lock-closed"></ion-icon>Reservadamente
                 </div>
-                <div class="locker">
+                <div class="open selecionado" onclick='privacidade(".open")'>
                     <ion-icon name="lock-open"></ion-icon>Público
                 </div>
             </div>
             </div>
         </div>
 
-        <ul class="messenger"></ul>
+        <ul class="messenger">
+            <!-- `<li class="${mensagens[i].type} N${i}">
+                <p><span class="time">(${mensagens[i].time}) </span> <span class="name">${mensagens[i].from}</span> para <span class="name">${mensagens[i].to}</span>: ${mensagens[i].text}</p>
+            </li>` -->
+        </ul>
 
         <div class="send">
             <div>
                 <input class="mensagem" type="text" placeholder="Escreva aqui...">
+                <div class="privateMsg">Enviando para Maria (reservadamente)</div>
             </div>
             <ion-icon name="paper-plane-outline" onclick="enviarMensagen()"></ion-icon>   
         </div>
