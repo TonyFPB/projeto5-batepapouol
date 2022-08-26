@@ -4,6 +4,8 @@ let idInterval;
 let idIntervalMensagens;
 let ultima_mensagem = {from: '', to: '', text: '', type: '', time: ''}
 let contatoVerde;
+let listaParticipantes;
+let nomeDeCada = []
 let privado = false;
 
 function deuCerto(certeza){
@@ -115,16 +117,17 @@ function showSideBar(){
 }
 
 function imprimeParticipantes(participantes){
-
+    nomeDeCada = []
     const lista=document.querySelector('.contatos');
     lista.innerHTML=`
     <li>
     <ion-icon name="people"></ion-icon> <p>Todos</p>
     </li>
     `;
-    const listaParticipantes = participantes.data;
+    listaParticipantes = participantes.data;
     
     for(let i = 0; i<listaParticipantes.length; i++){
+        nomeDeCada.push(listaParticipantes[i].name)
         if(listaParticipantes[i].name === contatoVerde){
             lista.innerHTML+=`
             <li  onclick = " selecionarContato(this)">
@@ -148,20 +151,36 @@ function buscandoPartip(){
 }
 
 function erroAoEnviarMensagem(erro){
-    alert('Voce nao esta mais logado');
-    window.location.reload();
+    if(!nomeDeCada.includes(usuario.name)){    
+        alert('Voce nao esta mais logado');
+        window.location.reload();
+    }
+    if(contatoVerde === undefined){
+        alert('Você nao selecionou um contato para mandar reservadamente!')
+    }
 }
 
 function enviarMensagen(){
-    const escrita=document.querySelector('.mensagem');
+    if(privado){
+        const escrita=document.querySelector('.mensagem');
     
-    const mensagem = {from:usuario.name, to: 'Todos', text: escrita.value, type: 'message'};
+        const mensagem = {from:usuario.name, to: contatoVerde, text: escrita.value, type: 'private_message'};
 
-    //https://mock-api.driven.com.br/api/v6/uol/messages
-    const requisicao = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', mensagem);
-    requisicao.then(deuCerto);
-    requisicao.catch(erroAoEnviarMensagem);
+        //https://mock-api.driven.com.br/api/v6/uol/messages
+        const requisicao = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', mensagem);
+        requisicao.then(deuCerto);
+        requisicao.catch(erroAoEnviarMensagem);
 
+    }else if(!privado){
+        const escrita=document.querySelector('.mensagem');
+    
+        const mensagem = {from:usuario.name, to: 'Todos', text: escrita.value, type: 'message'};
+
+        //https://mock-api.driven.com.br/api/v6/uol/messages
+        const requisicao = axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', mensagem);
+        requisicao.then(deuCerto);
+        requisicao.catch(erroAoEnviarMensagem);
+    }
     /* {
         from: "nome do usuário",
         to: "nome do destinatário (Todos se não for um específico)",
@@ -190,7 +209,7 @@ function selecionarContato(contato){
     paragrafo.classList.add('selecionado');
 
     const privateMsg = document.querySelector('.privateMsg')
-    privateMsg.innerHTML = ``
+    privateMsg.innerHTML = `Enviando para ${contatoVerde} (reservadamente).`
 }
 
 function privacidade(classe){
@@ -204,6 +223,7 @@ function privacidade(classe){
         contatoVerde = undefined
         if(document.querySelector('.contatos .selecionado') !== null){
             document.querySelector('.contatos .selecionado').classList.remove('selecionado')
+            document.querySelector('.privateMsg').innerHTML = ''
         }
         privado = false;
     
