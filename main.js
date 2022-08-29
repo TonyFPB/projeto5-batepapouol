@@ -48,9 +48,9 @@ function logando(resposta){
         idIntervalMensagens = setInterval( pegandoMensagens,1000 );
         idIntervalParticipantes= setInterval( buscandoPartip,5000 );
         
-        const telaInicial = document.querySelector('.first-screen');        
-        if(!telaInicial.classList.contains('hidden')){
-            telaInicial.classList.add('hidden');
+        const loading = document.querySelector('.carregar');        
+        if(loading.classList.contains('hidden')){
+            loading.classList.remove('hidden');
         }
         
     }
@@ -68,6 +68,10 @@ function logar(){
 }
 
 function ImprimeMensagens(resposta){
+    const telaInicial = document.querySelector('.first-screen')
+    if(!telaInicial.classList.contains('hidden')){
+        telaInicial.classList.add('hidden')
+    }
     mensagens = resposta.data;
     const ul= document.querySelector('.messenger')
     ul.innerHTML=''
@@ -92,7 +96,7 @@ function ImprimeMensagens(resposta){
         const comparacaoMensagens= (ultima_mensagem.from !== mensagens[mensagens.length-1].from || ultima_mensagem.time !== mensagens[mensagens.length-1].time || ultima_mensagem.type !== mensagens[mensagens.length-1].type || ultima_mensagem.text !== mensagens[mensagens.length-1].text || ultima_mensagem.to !== mensagens[mensagens.length-1].to)
         if(i === mensagens.length-1 && comparacaoMensagens){
             const ultima = document.querySelector(`.N${mensagens.length-1}`)
-            //ultima.scrollIntoView()
+            ultima.scrollIntoView()
             
             ultima_mensagem = mensagens[i]
         }

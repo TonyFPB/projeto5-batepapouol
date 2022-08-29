@@ -8,9 +8,11 @@ body{
     width: 100%;
     font-family: 'Roboto', sans-serif;
 }
-
+.carregar{
+    position: fixed;
+}
 .first-screen{
-    background-color: gray;
+    background-color: white;
     position: fixed;
     top: 0;
     left: 0;
@@ -45,6 +47,7 @@ body{
 .rigth{
     width: 60%;
     background-color: #FFFF;
+    overflow-y: scroll;
 }
 .topo{
     display: flex;
@@ -57,6 +60,8 @@ body{
 }
 .contatos p{
     font-size: 20px;
+    width: 270px;
+    overflow: hidden;
 }
 .contatos li{
     display: flex;
@@ -94,11 +99,13 @@ body{
 }
 
 button{
-    width: 109px;
+    width: 100px;
     height: 45px;
     background: #E7E7E7;
     border-radius: 9px;
+    border-width: 0px;
     margin-bottom: 295px;
+    color: #505050;
 }
 
 .header{
@@ -156,6 +163,7 @@ button{
     color: #505050;
     font-size: 16px;
     margin: 8px 0 0 5px;
+    overflow: hidden;
 }
 
 .send ::-webkit-input-placeholder {
